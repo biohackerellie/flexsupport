@@ -1,0 +1,212 @@
+{{define "dashboard"}}
+{{template "base" .}}
+{{end}}
+
+{{define "title"}}Dashboard - FlexSupport{{end}}
+
+{{define "content"}}
+<div class="px-4 py-6 sm:px-0">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Ticket Dashboard</h2>
+        <p class="mt-1 text-sm text-gray-600">Manage and track repair tickets</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-md bg-blue-500 p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Open Tickets</dt>
+                            <dd class="text-2xl font-semibold text-gray-900" hx-get="/api/stats/open" hx-trigger="load, every 30s" hx-swap="innerHTML">
+                                {{.Stats.OpenTickets}}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-md bg-yellow-500 p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">In Progress</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{.Stats.InProgress}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-md bg-red-500 p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Overdue</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{.Stats.Overdue}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-md bg-green-500 p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Completed Today</dt>
+                            <dd class="text-2xl font-semibold text-gray-900">{{.Stats.CompletedToday}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="bg-white shadow rounded-lg mb-6">
+        <div class="px-4 py-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex-1">
+                    <input type="text"
+                           name="search"
+                           placeholder="Search tickets..."
+                           class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                           hx-get="/tickets/search"
+                           hx-trigger="keyup changed delay:300ms"
+                           hx-target="#ticket-list"
+                           hx-swap="innerHTML">
+                </div>
+                <div class="flex gap-2">
+                    <select name="status"
+                            class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                            hx-get="/tickets"
+                            hx-trigger="change"
+                            hx-target="#ticket-list"
+                            hx-swap="innerHTML"
+                            hx-include="[name='search']">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="waiting_parts">Waiting for Parts</option>
+                        <option value="ready">Ready for Pickup</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <a href="/tickets/new" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        New Ticket
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tickets Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div id="ticket-list" class="overflow-x-auto">
+            {{template "ticket-list" .}}
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "ticket-list"}}
+<table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+        <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Ticket #
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Customer
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Device
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Assigned To
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Due Date
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+        {{range .Tickets}}
+        <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <a href="/tickets/{{.ID}}" class="text-blue-600 hover:text-blue-900">#{{.ID}}</a>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">{{.CustomerName}}</div>
+                <div class="text-sm text-gray-500">{{.CustomerPhone}}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{.DeviceType}}</div>
+                <div class="text-sm text-gray-500">{{.DeviceModel}}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{.StatusClass}}">
+                    {{.StatusDisplay}}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{if .AssignedTo}}{{.AssignedTo}}{{else}}<span class="text-gray-400">Unassigned</span>{{end}}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{if .DueDate}}{{.DueDate}}{{else}}<span class="text-gray-400">Not set</span>{{end}}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <a href="/tickets/{{.ID}}/edit" class="text-blue-600 hover:text-blue-900">Edit</a>
+                <a href="/tickets/{{.ID}}" class="text-gray-600 hover:text-gray-900">View</a>
+            </td>
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                No tickets found. <a href="/tickets/new" class="text-blue-600 hover:text-blue-900">Create a new ticket</a>
+            </td>
+        </tr>
+        {{end}}
+    </tbody>
+</table>
+{{end}}

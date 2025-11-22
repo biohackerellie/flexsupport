@@ -1,0 +1,275 @@
+{{define "ticket-form"}}
+{{template "base" .}}
+{{end}}
+
+{{define "title"}}{{if .Ticket.ID}}Edit Ticket #{{.Ticket.ID}}{{else}}New Ticket{{end}} - FlexSupport{{end}}
+
+{{define "content"}}
+<div class="px-4 py-6 sm:px-0">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">
+            {{if .Ticket.ID}}Edit Ticket #{{.Ticket.ID}}{{else}}Create New Ticket{{end}}
+        </h2>
+        <p class="mt-1 text-sm text-gray-600">Fill in the repair ticket details</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Form -->
+        <div class="lg:col-span-2">
+            <form hx-post="{{if .Ticket.ID}}/tickets/{{.Ticket.ID}}{{else}}/tickets{{end}}"
+                  hx-target="#form-container"
+                  hx-swap="outerHTML"
+                  class="space-y-6">
+
+                <!-- Customer Information -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Customer Information</h3>
+
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div class="col-span-2">
+                                <label for="customer_name" class="block text-sm font-medium text-gray-700">
+                                    Customer Name <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text"
+                                       name="customer_name"
+                                       id="customer_name"
+                                       required
+                                       value="{{.Ticket.CustomerName}}"
+                                       class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="John Doe">
+                            </div>
+
+                            <div>
+                                <label for="customer_phone" class="block text-sm font-medium text-gray-700">
+                                    Phone Number <span class="text-red-500">*</span>
+                                </label>
+                                <input type="tel"
+                                       name="customer_phone"
+                                       id="customer_phone"
+                                       required
+                                       value="{{.Ticket.CustomerPhone}}"
+                                       class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="(555) 123-4567">
+                            </div>
+
+                            <div>
+                                <label for="customer_email" class="block text-sm font-medium text-gray-700">
+                                    Email Address
+                                </label>
+                                <input type="email"
+                                       name="customer_email"
+                                       id="customer_email"
+                                       value="{{.Ticket.CustomerEmail}}"
+                                       class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="john@example.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Device Information -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Device Information</h3>
+
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label for="device_type" class="block text-sm font-medium text-gray-700">
+                                    Device Type <span class="text-red-500">*</span>
+                                </label>
+                                <select name="device_type"
+                                        id="device_type"
+                                        required
+                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                    <option value="">Select device type</option>
+                                    <option value="smartphone" {{if eq .Ticket.DeviceType "smartphone"}}selected{{end}}>Smartphone</option>
+                                    <option value="tablet" {{if eq .Ticket.DeviceType "tablet"}}selected{{end}}>Tablet</option>
+                                    <option value="laptop" {{if eq .Ticket.DeviceType "laptop"}}selected{{end}}>Laptop</option>
+                                    <option value="desktop" {{if eq .Ticket.DeviceType "desktop"}}selected{{end}}>Desktop</option>
+                                    <option value="console" {{if eq .Ticket.DeviceType "console"}}selected{{end}}>Gaming Console</option>
+                                    <option value="other" {{if eq .Ticket.DeviceType "other"}}selected{{end}}>Other</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="device_brand" class="block text-sm font-medium text-gray-700">
+                                    Brand
+                                </label>
+                                <input type="text"
+                                       name="device_brand"
+                                       id="device_brand"
+                                       value="{{.Ticket.DeviceBrand}}"
+                                       class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="Apple, Samsung, etc.">
+                            </div>
+
+                            <div>
+                                <label for="device_model" class="block text-sm font-medium text-gray-700">
+                                    Model
+                                </label>
+                                <input type="text"
+                                       name="device_model"
+                                       id="device_model"
+                                       value="{{.Ticket.DeviceModel}}"
+                                       class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="iPhone 13, Galaxy S21, etc.">
+                            </div>
+
+                            <div>
+                                <label for="serial_number" class="block text-sm font-medium text-gray-700">
+                                    Serial Number / IMEI
+                                </label>
+                                <input type="text"
+                                       name="serial_number"
+                                       id="serial_number"
+                                       value="{{.Ticket.SerialNumber}}"
+                                       class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Repair Details -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Repair Details</h3>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label for="issue_description" class="block text-sm font-medium text-gray-700">
+                                    Issue Description <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="issue_description"
+                                          id="issue_description"
+                                          required
+                                          rows="4"
+                                          class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                          placeholder="Describe the problem in detail...">{{.Ticket.IssueDescription}}</textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label for="priority" class="block text-sm font-medium text-gray-700">
+                                        Priority
+                                    </label>
+                                    <select name="priority"
+                                            id="priority"
+                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="low" {{if eq .Ticket.Priority "low"}}selected{{end}}>Low</option>
+                                        <option value="normal" {{if eq .Ticket.Priority "normal"}}selected{{end}}>Normal</option>
+                                        <option value="high" {{if eq .Ticket.Priority "high"}}selected{{end}}>High</option>
+                                        <option value="urgent" {{if eq .Ticket.Priority "urgent"}}selected{{end}}>Urgent</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="estimated_cost" class="block text-sm font-medium text-gray-700">
+                                        Estimated Cost
+                                    </label>
+                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-500 sm:text-sm">$</span>
+                                        </div>
+                                        <input type="number"
+                                               name="estimated_cost"
+                                               id="estimated_cost"
+                                               step="0.01"
+                                               min="0"
+                                               value="{{.Ticket.EstimatedCost}}"
+                                               class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+                                               placeholder="0.00">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="assigned_to" class="block text-sm font-medium text-gray-700">
+                                        Assign To
+                                    </label>
+                                    <select name="assigned_to"
+                                            id="assigned_to"
+                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="">Unassigned</option>
+                                        {{range .Technicians}}
+                                        <option value="{{.ID}}" {{if eq $.Ticket.AssignedTo .Name}}selected{{end}}>{{.Name}}</option>
+                                        {{end}}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="due_date" class="block text-sm font-medium text-gray-700">
+                                        Due Date
+                                    </label>
+                                    <input type="date"
+                                           name="due_date"
+                                           id="due_date"
+                                           value="{{.Ticket.DueDate}}"
+                                           class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="internal_notes" class="block text-sm font-medium text-gray-700">
+                                    Internal Notes
+                                </label>
+                                <textarea name="internal_notes"
+                                          id="internal_notes"
+                                          rows="3"
+                                          class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                          placeholder="Notes visible only to staff...">{{.Ticket.InternalNotes}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-3">
+                    <a href="{{if .Ticket.ID}}/tickets/{{.Ticket.ID}}{{else}}/{{end}}"
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {{if .Ticket.ID}}Update Ticket{{else}}Create Ticket{{end}}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar with helpful info -->
+        <div class="lg:col-span-1">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="text-sm font-medium text-blue-900 mb-2">Quick Tips</h4>
+                <ul class="text-sm text-blue-700 space-y-2">
+                    <li>• Collect device password/PIN if needed</li>
+                    <li>• Document any existing damage</li>
+                    <li>• Ask about data backup needs</li>
+                    <li>• Set realistic due dates</li>
+                    <li>• Take photos if necessary</li>
+                </ul>
+            </div>
+
+            {{if .Ticket.ID}}
+            <div class="mt-6 bg-white shadow rounded-lg p-4">
+                <h4 class="text-sm font-medium text-gray-900 mb-3">Ticket History</h4>
+                <div class="space-y-3">
+                    <div class="text-xs">
+                        <span class="text-gray-500">Created:</span>
+                        <span class="text-gray-900">{{.Ticket.CreatedAt}}</span>
+                    </div>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Last Updated:</span>
+                        <span class="text-gray-900">{{.Ticket.UpdatedAt}}</span>
+                    </div>
+                    <div class="text-xs">
+                        <span class="text-gray-500">Created By:</span>
+                        <span class="text-gray-900">{{.Ticket.CreatedBy}}</span>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}

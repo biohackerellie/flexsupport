@@ -1,0 +1,39 @@
+/* Custom styles for RepairDesk */
+
+/* Add any custom CSS overrides here */
+
+/* Smooth transitions for htmx swaps */
+.htmx-swapping {
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+}
+
+/* Loading indicator for htmx requests */
+.htmx-request .htmx-indicator {
+    display: inline-block;
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 300ms ease-out;
+}
+
+/* Print styles for tickets */
+@media print {
+    nav, .no-print {
+        display: none;
+    }
+
+    .print-only {
+        display: block;
+    }
+}
